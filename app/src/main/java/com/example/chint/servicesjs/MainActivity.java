@@ -21,52 +21,24 @@ import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button start, stop, sjob;
+    Button start, stop;
     Intent i;
-    ComponentName myServiceComponent;
-    Sservice myService;
-    Handler myHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg){
-            myService = (Sservice) msg.obj;
-            myService.setUICallback(MainActivity.this);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        myServiceComponent = new ComponentName(this, Sservice.class);
-
-        Intent myServiceIntent = new Intent(this, Sservice.class);
-        myServiceIntent.putExtra("messenger", new Messenger(myHandler));
-        startService(myServiceIntent);
-
         start = (Button) findViewById(R.id.startService);
         stop = (Button) findViewById(R.id.stopService);
-        sjob = (Button) findViewById(R.id.schedule);
 
-        sjob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                myService = new Sservice(getBaseContext());
-                JobInfo.Builder builder = new JobInfo.Builder(0, myServiceComponent);
-                builder.setRequiresCharging(true);
-                builder.setRequiresDeviceIdle(false);
-                builder.setPeriodic(2000, 100);
-                myService.scheduleJob(builder.build());
-            }
-        });
 
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 i = new Intent(MainActivity.this, Fservice.class);
                 startService(i);
-                Toast.makeText(MainActivity.this, "Check Log", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Service Started", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -76,8 +48,21 @@ public class MainActivity extends AppCompatActivity {
                 if(i!=null) {
                     stopService(i);
                 }
-                Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Service Stopped", Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        i = new Intent(MainActivity.this, Fservice.class);
+        startService(i);
+        Toast.makeText(this, "Service Started", Toast.LENGTH_LONG).show();
     }
 }

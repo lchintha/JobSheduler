@@ -17,8 +17,6 @@
             </intent-filter>
         </activity>
         <service android:name=".Fservice"/>
-        <service android:name=".Sservice"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
     </application>
 
 </manifest>

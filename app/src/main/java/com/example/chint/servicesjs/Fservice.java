@@ -21,12 +21,12 @@ public class Fservice extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("TAG", "Service Stopped");
+        Log.e("TAG", "Service Stopped");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i("TAG", "Service Running");
+        Log.e("TAG", "Service Running");
         return super.onStartCommand(intent, flags, startId);
     }
 }
